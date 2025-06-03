@@ -1,0 +1,17 @@
+# 1. Create the conda environment with Python 3.10
+conda create --name flask_env python=3.10 -y
+
+# 2. Activate the environment
+conda activate flask_env
+
+# 3. Install pip inside the environment (usually comes pre-installed, but safe to ensure)
+conda install pip -y
+
+# 4. Install all packages from requirements.txt using pip
+pip install -r requirements.txt
+
+# 5. (Optional) Verify installed packages
+pip list
+
+# 6. When done, deactivate the environment
+conda deactivate

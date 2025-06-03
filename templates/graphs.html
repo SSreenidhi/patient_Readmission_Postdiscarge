@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Health Pulse - Readmission Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f0f2f5;
+            color: #333;
+            padding-top: 150px;
+            padding-bottom: 100px;
+        }
+        header {
+            background: linear-gradient(to right, #2563eb, #1d4ed8);
+            color: white;
+            padding: 1rem 3rem;
+            padding-bottom: 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+          }
+      
+          .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+          }
+      
+          .header-left h1 {
+            margin: 0;
+            font-size: 1.5rem;
+          }
+      
+          .header-nav ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+          }
+      
+          .header-nav ul li a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+          }
+      
+          .header-nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+          }
+      
+          .logo-container {
+            width: 3rem;
+            height: 3rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+          }
+      
+          .logo-container:hover {
+            transform: scale(1.05);
+          }
+      
+          .logo-container svg {
+            width: 1.75rem;
+            height: 1.75rem;
+            fill: white;
+          }
+        main {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+        .chart-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+        }
+        canvas {
+            width: 100% !important;
+            max-height: 300px;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <video autoplay muted loop id="bgVideo" style="
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover;
+        z-index: -1;
+        filter: brightness(0.6);
+    ">
+      <source src="static/video/graphs.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+
+    <header>
+        <div class="header-left">
+          <div class="logo-container">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-guitar"><path d="M12 2v6a1 1 0 0 0 1 1h6v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a1 1 0 0 0 1-1V2c0-.5.5-1 1-1h12z"/><path d="M17 13a4 4 0 1 1-8 0"/></svg>
+          </div>
+          <h1>Readmission Dashboard</h1>
+        </div>
+        <nav class="header-nav">
+          <ul>
+            <li>
+              <a href="/">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span>Home</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+
+    <main>
+        <div class="chart-container">
+            <h2>Readmission Risk by Age Group</h2>
+            <canvas id="ageGroupGraph"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <h2>Avg. Length of Stay vs Readmissions</h2>
+            <canvas id="stayVsReadmitGraph"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <h2>Readmission Risk by Department</h2>
+            <canvas id="departmentGraph"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <h2>Readmission Rates by Primary Diagnosis</h2>
+            <canvas id="diagnosisGraph"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <h2>Readmission Rates by Gender</h2>
+            <canvas id="genderGraph"></canvas>
+        </div>
+        
+        <div class="chart-container">
+            <h2>Average Medication Count vs Readmissions</h2>
+            <canvas id="medicationGraph"></canvas>
+        </div>
+        
+    </main>
+
+    <footer>
+        <p>© 2025 HealthPulse. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Enhanced Readmission Risk by Age Group
+            new Chart(document.getElementById("ageGroupGraph"), {
+                type: "bar",
+                data: {
+                    labels: ["[40-50)", "[50-60)", "[60-70)", "[70-80)", "[80-90)"],
+                    datasets: [
+                        {
+                            label: "Not Readmitted",
+                            data: [1405, 2486, 3143, 3501, 2277],
+                            backgroundColor: "rgba(76, 175, 80, 0.8)",
+                            borderColor: "rgba(76, 175, 80, 1)",
+                            borderWidth: 1
+                        },
+                        {
+                            label: "Readmitted",
+                            data: [1127, 1966, 2770, 3336, 2239],
+                            backgroundColor: "rgba(244, 67, 54, 0.8)",
+                            borderColor: "rgba(244, 67, 54, 1)",
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `${context.dataset.label}: ${context.raw}`;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: "top"
+                        },
+                        title: {
+                            display: true,
+                            text: "Readmission Risk by Age Group"
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: "rgba(0, 0, 0, 0.1)"
+                            }
+                        }
+                    }
+                }
+            });
+    
+            // Enhanced Avg. Length of Stay vs Readmissions
+            new Chart(document.getElementById("stayVsReadmitGraph"), {
+                type: "line",
+                data: {
+                    labels: ["1", "2", "3", "4", "5"],
+                    datasets: [
+                        {
+                            label: "Not Readmitted",
+                            data: [2054, 2180, 2322, 1754, 1314],
+                            borderColor: "rgba(33, 150, 243, 1)",
+                            backgroundColor: "rgba(33, 150, 243, 0.2)",
+                            borderWidth: 2,
+                            pointRadius: 5,
+                            pointBackgroundColor: "rgba(33, 150, 243, 1)"
+                        },
+                        {
+                            label: "Readmitted",
+                            data: [1426, 1806, 1989, 1713, 1228],
+                            borderColor: "rgba(255, 87, 34, 1)",
+                            backgroundColor: "rgba(255, 87, 34, 0.2)",
+                            borderWidth: 2,
+                            pointRadius: 5,
+                            pointBackgroundColor: "rgba(255, 87, 34, 1)"
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `${context.dataset.label}: ${context.raw}`;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: "top"
+                        },
+                        title: {
+                            display: true,
+                            text: "Average Length of Stay vs Readmissions"
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: "Length of Stay (days)"
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: "rgba(0, 0, 0, 0.1)"
+                            }
+                        }
+                    }
+                }
+            });
+    
+            // Enhanced Readmission Risk by Department
+            new Chart(document.getElementById("departmentGraph"), {
+                type: "bar",
+                data: {
+                    labels: ["Surgery", "Cardiology", "Neurology", "Orthopedics", "Oncology"],
+                    datasets: [
+                        {
+                            label: "Not Readmitted",
+                            data: [3000, 2500, 1800, 2200, 1500],
+                            backgroundColor: "rgba(75, 192, 192, 0.8)",
+                            borderColor: "rgba(75, 192, 192, 1)",
+                            borderWidth: 1
+                        },
+                        {
+                            label: "Readmitted",
+                            data: [900, 1200, 1500, 700, 1100],
+                            backgroundColor: "rgba(255, 99, 132, 0.8)",
+                            borderColor: "rgba(255, 99, 132, 1)",
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `${context.dataset.label}: ${context.raw}`;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: "top"
+                        },
+                        title: {
+                            display: true,
+                            text: "Readmission Risk by Department"
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: "rgba(0, 0, 0, 0.1)"
+                            }
+                        }
+                    }
+                }
+            });
+    
+            // Enhanced Readmission Rates by Primary Diagnosis
+            new Chart(document.getElementById("diagnosisGraph"), {
+                type: "bar",
+                data: {
+                    labels: ["Diabetes", "Hypertension", "Heart Failure", "COPD", "Stroke"],
+                    datasets: [
+                        {
+                            label: "Not Readmitted",
+                            data: [1800, 2100, 1600, 1400, 1100],
+                            backgroundColor: "rgba(54, 162, 235, 0.8)",
+                            borderColor: "rgba(54, 162, 235, 1)",
+                            borderWidth: 1
+                        },
+                        {
+                            label: "Readmitted",
+                            data: [700, 800, 900, 600, 500],
+                            backgroundColor: "rgba(255, 206, 86, 0.8)",
+                            borderColor: "rgba(255, 206, 86, 1)",
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `${context.dataset.label}: ${context.raw}`;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: "top"
+                        },
+                        title: {
+                            display: true,
+                            text: "Readmission Rates by Primary Diagnosis"
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: "rgba(0, 0, 0, 0.1)"
+                            }
+                        }
+                    }
+                }
+            });
+    
+            // Enhanced Readmission Rates by Gender
+            new Chart(document.getElementById("genderGraph"), {
+                type: "pie",
+                data: {
+                    labels: ["Male", "Female", "Other"],
+                    datasets: [
+                        {
+                            label: "Readmitted",
+                            data: [4200, 4300, 200],
+                            backgroundColor: [
+                                "rgba(54, 162, 235, 0.8)",
+                                "rgba(255, 99, 132, 0.8)",
+                                "rgba(201, 203, 207, 0.8)"
+                            ],
+                            borderColor: [
+                                "rgba(54, 162, 235, 1)",
+                                "rgba(255, 99, 132, 1)",
+                                "rgba(201, 203, 207, 1)"
+                            ],
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: "right"
+                        },
+                        title: {
+                            display: true,
+                            text: "Readmission Rates by Gender"
+                        }
+                    }
+                }
+            });
+    
+            // Average Medication Count vs Readmissions
+            new Chart(document.getElementById("medicationGraph"), {
+                type: "line",
+                data: {
+                    labels: ["0", "1", "2", "3", "4", "5+"],
+                    datasets: [
+                        {
+                            label: "Not Readmitted",
+                            data: [1800, 2200, 2500, 2300, 2000, 1500],
+                            borderColor: "rgba(75, 192, 192, 1)",
+                            backgroundColor: "rgba(75, 192, 192, 0.2)",
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointBackgroundColor: "rgba(75, 192, 192, 1)"
+                        },
+                        {
+                            label: "Readmitted",
+                            data: [900, 1200, 1400, 1500, 1700, 1800],
+                            borderColor: "rgba(255, 159, 64, 1)",
+                            backgroundColor: "rgba(255, 159, 64, 0.2)",
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointBackgroundColor: "rgba(255, 159, 64, 1)"
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: "top"
+                        },
+                        title: {
+                            display: true,
+                            text: "Average Medication Count vs Readmissions"
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Medication Count"
+                            }
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

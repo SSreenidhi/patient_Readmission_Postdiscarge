@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Discharge Care</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            height: 100%;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Video Container */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        #bgVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Header Styles */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(37, 99, 235, 0.95);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-container {
+            width: 3rem;
+            height: 3rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-container svg {
+          width: 1.75rem;
+          height: 1.75rem;
+          fill: white;
+        }
+        
+        .header-nav ul {
+            display: flex;
+            gap: 0.5rem;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .header-nav ul li a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .header-nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
+
+        /* Main Content */
+        main {
+            position: relative;
+            min-height: 100vh;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 80px 20px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin: 1rem;
+        }
+
+        /* Form Styles */
+        .form-container {
+            width: 100%;
+        }
+
+        .form-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .form-icon {
+            background: #e0f2fe;
+            padding: 12px;
+            border-radius: 12px;
+            margin-right: 1rem;
+        }
+
+        .form-title {
+            color: #1e40af;
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-icon {
+            position: relative;
+        }
+
+        .input-icon svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            appearance: none;
+            background-color: white;
+        }
+
+        select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+
+        .severity-options {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .severity-option {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: white;
+        }
+
+        .severity-option.selected {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, rgb(16, 225, 20) 0%, #2563eb 100%);
+            color: white;
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        /* Results Section */
+        .recommendation-result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            display: none;
+        }
+
+        .recommendation-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .recommendation-icon {
+            background: #dbeafe;
+            padding: 8px;
+            border-radius: 8px;
+            margin-right: 1rem;
+        }
+
+        .recommendation-content {
+            margin-top: 1rem;
+        }
+
+        .recommendation-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Footer */
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <video autoplay muted loop id="bgVideo">
+            <source src="static/video/post-discharge-care.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+    </div>
+
+    <header>
+      <div class="header-left">
+        <div class="logo-container">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-guitar"><path d="M12 2v6a1 1 0 0 0 1 1h6v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a1 1 0 0 0 1-1V2c0-.5.5-1 1-1h12z"/><path d="M17 13a4 4 0 1 1-8 0"/></svg>
+        </div>
+        <h1>Post-Discharge Care</h1>
+      </div>
+      <nav class="header-nav">
+        <ul>
+          <li>
+            <a href="/">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <span>Home</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="form-container">
+                <div class="form-header">
+                    <div class="form-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </div>
+                    <h2 class="form-title">Post Discharge Care Plan</h2>
+                </div>
+
+                <form id="dischargeForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="disease">Medical Condition</label>
+                            <div class="input-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg>
+                                <select id="disease" required>
+                                    <option value="" disabled selected>Select condition</option>
+                                    <option value="asthma">Asthma</option>
+                                    <option value="diabetes">Diabetes</option>
+                                    <option value="hypertension">Hypertension</option>
+                                    <option value="heart_disease">Heart Disease</option>
+                                    <option value="pneumonia">Pneumonia</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ageGroup">Age Group</label>
+                            <div class="input-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                <select id="ageGroup" required>
+                                    <option value="" disabled selected>Select age group</option>
+                                    <option value="0-30">0-30 years</option>
+                                    <option value="31-50">31-50 years</option>
+                                    <option value="50+">50+ years</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Condition Severity</label>
+                        <div class="severity-options">
+                            <div class="severity-option" data-value="mild">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                                <span>Mild</span>
+                            </div>
+                            <div class="severity-option" data-value="moderate">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="15" x2="16" y2="15"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                                <span>Moderate</span>
+                            </div>
+                            <div class="severity-option" data-value="severe">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                                <span>Severe</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        Generate Care Plan
+                    </button>
+                </form>
+
+                <div id="recommendationResult" class="recommendation-result">
+                    <div class="recommendation-header">
+                        <div class="recommendation-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        </div>
+                        <h3>Your Personalized Care Plan</h3>
+                    </div>
+                    <div id="recommendationContent" class="recommendation-content"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 HealthPulse. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const recommendations = {
+            asthma: {
+                "0-30": {
+                    mild: {
+                      title: "Young Adult Asthma - Mild",
+                      medications: [
+                        "Use prescribed inhalers as directed",
+                        "Rescue inhaler as needed"
+                      ],
+                      lifestyle: [
+                        "Avoid known triggers",
+                        "Mild regular exercise with warm-up"
+                      ],
+                      followUp: "Follow up in 2 weeks",
+                      warning: "Contact provider if symptoms worsen"
+                    },
+                    moderate: {
+                        title: "Young Adult Asthma - Moderate",
+                        medications: [
+                          "Combination inhalers",
+                          "Anti-inflammatory medications"
+                        ],
+                        lifestyle: [
+                          "Daily peak flow monitoring",
+                          "Strict allergen control"
+                        ],
+                        followUp: "Weekly telehealth check-ins",
+                        warning: "Increased wheezing or chest tightness needs attention"
+                    },
+                    severe: {
+                        title: "Young Adult Asthma - Severe",
+                        medications: [
+                          "High-dose corticosteroids",
+                          "Nebulizer treatments"
+                        ],
+                        lifestyle: [
+                          "Avoid exertion",
+                          "Use of emergency action plan"
+                        ],
+                        followUp: "Specialist review every 2 weeks",
+                        warning: "Emergency room visit for severe breathlessness"
+                    }
+                },
+                "31-50": {
+                    mild: {
+                        title: "Adult Asthma - Mild",
+                        medications: [
+                           "Inhalers as needed",
+                           "Avoid unnecessary medications"
+                        ],
+                        lifestyle: [
+                           "Identify workplace triggers",
+                           "Moderate physical activity"
+                        ],
+                        followUp: "Monthly checks",
+                        warning: "Persistent coughing needs evaluation"
+                    },
+                    moderate: {
+                        title: "Adult Asthma - Moderate",
+                        medications: [
+                           "Long-acting bronchodilators",
+                           "Oral anti-inflammatory medications"
+                        ],
+                        lifestyle: [
+                           "Use HEPA filters at home",
+                           "Manage seasonal allergies"
+                        ],
+                        followUp: "Bi-weekly appointments",
+                        warning: "Frequent nocturnal symptoms require urgent care"
+                    },
+                    severe: {
+                        title: "Adult Asthma - Severe",
+                        medications: [
+                           "Nebulizers and high-dose corticosteroids",
+                           "Specialist-prescribed biologics"
+                        ],
+                        lifestyle: [
+                           "Minimal outdoor exposure during high pollen",
+                           "Emergency plan at work"
+                        ],
+                        followUp: "Weekly monitoring",
+                        warning: "Hospitalization if acute distress occurs"
+                    }
+                },
+                "50+": {
+                    mild: {
+                        title: "Senior Asthma - Mild",
+                    medications: [
+                        "Adjusted inhaler dose",
+                        "Routine check of inhaler technique"
+                    ],
+                    lifestyle: [
+                        "Minimize dust exposure",
+                        "Light indoor activity"
+                     ],
+                    followUp: "Monthly nurse visits",
+                    warning: "Increased fatigue with symptoms needs review"
+                    },
+                    moderate: {
+                         title: "Senior Asthma - Moderate",
+                         medications: [
+                            "Oral corticosteroids",
+                            "Maintenance inhalers"
+                         ],
+                         lifestyle: [
+                            "Avoid strong perfumes",
+                            "Daily symptom journal"
+                         ],
+                         followUp: "Bi-weekly visits",
+                            warning: "Sudden chest pain should prompt emergency care"
+                    },
+                    severe: {
+                         title: "Senior Asthma - Severe",
+                         medications: [
+                            "Biologic injections",
+                            "Regular nebulizer sessions"
+                         ],
+                         lifestyle: [
+                            "Assistance with medication adherence",
+                            "Home oxygen if prescribed"
+                         ],
+                        followUp: "Weekly home health monitoring",
+                        warning: "Confusion or cyanosis requires ER visit"
+                     }
+                }
+
+            },
+            diabetes: {
+                "0-30": {
+                  mild: {
+                    title: "Young Adult Diabetes - Mild",
+                    medications: [
+                      "Metformin",
+                      "Blood sugar monitoring"
+                    ],
+                    lifestyle: [
+                      "Balanced diet",
+                      "Consistent meal timing"
+                    ],
+                    followUp: "Bi-weekly virtual check-ins",
+                    warning: "Signs of hypoglycemia need attention"
+                  },
+                  moderate: {
+                    title: "Young Adult Diabetes - Moderate",
+                    medications: [
+                      "Insulin therapy as advised",
+                      "Monitor blood glucose 3-4 times daily"
+                    ],
+                    lifestyle: [
+                      "Carbohydrate counting",
+                      "Exercise with glucose monitoring"
+                    ],
+                    followUp: "Weekly clinic visits",
+                    warning: "Persistent hyperglycemia requires medication adjustment"
+                  },
+                  severe: {
+                    title: "Young Adult Diabetes - Severe",
+                    medications: [
+                      "Multiple daily insulin doses",
+                      "Ketone testing supplies"
+                    ],
+                    lifestyle: [
+                      "Structured support program",
+                      "Emergency glucagon pen availability"
+                    ],
+                    followUp: "Frequent endocrinologist follow-up",
+                    warning: "Ketoacidosis symptoms demand ER care"
+                  }
+                },
+                "31-50": {
+                    mild: {
+                      title: "Adult Diabetes - Mild",
+                      medications: [
+                          "Oral antidiabetics",
+                          "Routine A1C tests"
+                      ],
+                      lifestyle: [
+                          "Meal planning",
+                          "Regular physical activity"
+                      ],
+                      followUp: "Monthly primary care visits",
+                      warning: "Sudden changes in weight or vision require attention"
+                    },
+                    moderate: {
+                      title: "Adult Diabetes - Moderate",
+                      medications: [
+                          "Insulin and oral medication combo",
+                          "Frequent glucose checks"
+                      ],
+                      lifestyle: [
+                          "Supervised exercise",
+                          "Dietician consultation"
+                      ],
+                      followUp: "Bi-weekly endocrinology visits",
+                      warning: "Foot numbness or blurry vision should be evaluated"
+                    },
+                    severe: {
+                      title: "Adult Diabetes - Severe",
+                      medications: [
+                        "Multiple insulin injections",
+                        "Continuous glucose monitoring (CGM)"
+                      ],
+                      lifestyle: [
+                        "Caregiver support",
+                        "Home safety for hypoglycemia prevention"
+                      ],
+                      followUp: "Weekly in-person reviews",
+                      warning: "Wounds or ulcers need urgent treatment"
+                    }
+                  },
+                 "50+": {
+                    mild: {
+                      title: "Senior Diabetes - Mild",
+                      medications: [
+                         "Simplified oral regimen",
+                         "Regular renal checks"
+                      ],
+                      lifestyle: [
+                         "Low GI diet",
+                         "Gentle physical activity"
+                      ],
+                      followUp: "Monthly nurse checks",
+                      warning: "Dizziness or weakness should be reported"
+                    },
+                    moderate: {
+                      title: "Senior Diabetes - Moderate",
+                      medications: [
+                         "Oral meds with insulin",
+                         "Monitor for medication side effects"
+                      ],
+                      lifestyle: [
+                         "Daily foot and eye checks",
+                         "Assistance with diet and mobility"
+                      ],
+                      followUp: "Bi-weekly geriatric follow-up",
+                      warning: "Changes in cognition may indicate complications"
+                    },
+                    severe: {
+                      title: "Senior Diabetes - Severe",
+                      medications: [
+                       "Insulin pens or pumps",
+                       "Frequent monitoring for hypoglycemia"
+                      ],
+                      lifestyle: [
+                       "Home care support",
+                       "Emergency contacts on file"
+                      ],
+                      followUp: "Weekly home visits",
+                      warning: "Hospital visit if confusion or high glucose persists"
+                    }
+                  }
+            },
+            hypertension: {
+              "0-30": {
+                mild: {
+                  title: "Young Adult Hypertension - Mild",
+                  medications: ["Low-dose ACE inhibitors", "Sodium reduction"],
+                  lifestyle: ["Exercise 4-5 times a week", "Avoid energy drinks"],
+                  followUp: "Monthly BP checks",
+                  warning: "Headaches or dizziness should be reported"
+                },
+                moderate: {
+                  title: "Young Adult Hypertension - Moderate",
+                  medications: ["Beta-blockers", "Daily blood pressure monitoring"],
+                  lifestyle: ["Weight loss program", "Stress management"],
+                  followUp: "Bi-weekly physician visits",
+                  warning: "Chest tightness or visual changes need prompt care"
+                },
+                severe: {
+                  title: "Young Adult Hypertension - Severe",
+                  medications: ["Combination antihypertensives", "Emergency meds if needed"],
+                  lifestyle: ["Limit strenuous activity", "Low-sodium meal delivery plan"],
+                  followUp: "Weekly specialist monitoring",
+                  warning: "Hypertensive crisis symptoms require ER visit"
+                }
+              },
+              "31-50": {
+                mild: {
+                  title: "Adult Hypertension - Mild",
+                  medications: ["Thiazide diuretics", "Lifestyle modifications"],
+                  lifestyle: ["DASH diet", "Daily walking"],
+                  followUp: "Monthly check-ins",
+                  warning: "Unexplained fatigue or nosebleeds require review"
+                },
+                moderate: {
+                  title: "Adult Hypertension - Moderate",
+                  medications: ["ARBs or calcium channel blockers", "Ambulatory BP monitoring"],
+                  lifestyle: ["Salt limitation", "Supervised gym program"],
+                  followUp: "Every 2 weeks with monitoring logs",
+                  warning: "Shortness of breath or leg swelling signals risk"
+                },
+                severe: {
+                  title: "Adult Hypertension - Severe",
+                  medications: ["High-dose combination therapy", "Fast-acting PRN meds"],
+                  lifestyle: ["Cardiologist-supervised care plan", "Limited caffeine/alcohol"],
+                  followUp: "Weekly clinical assessments",
+                  warning: "BP above 180/120 requires emergency care"
+                }
+              },
+              "50+": {
+                mild: {
+                  title: "Senior Hypertension - Mild",
+                  medications: ["Low-dose diuretics", "Renal function monitoring"],
+                  lifestyle: ["Gentle walking", "Hydration tracking"],
+                  followUp: "Monthly nurse visits",
+                  warning: "Sudden imbalance or confusion needs evaluation"
+                },
+                moderate: {
+                  title: "Senior Hypertension - Moderate",
+                  medications: ["Dual therapy with renal-safe meds", "Potassium monitoring"],
+                  lifestyle: ["Assisted meal prep", "Daily BP tracking"],
+                  followUp: "Bi-weekly home BP review",
+                  warning: "Chest pain or gait changes are red flags"
+                },
+                severe: {
+                  title: "Senior Hypertension - Severe",
+                  medications: ["Multiple agents with close supervision", "Emergency PRN meds"],
+                  lifestyle: ["Home care plan", "Emergency alert device recommended"],
+                  followUp: "Weekly visits and telemonitoring",
+                  warning: "Stroke signs demand immediate ER response"
+                }
+              }
+            },
+            
+            heart_disease: {
+              "0-30": {
+                mild: {
+                  title: "Young Adult Heart Disease - Mild",
+                  medications: ["Low-dose statins", "Aspirin as needed"],
+                  lifestyle: ["Low-cholesterol diet", "Cardio-focused activity"],
+                  followUp: "Monthly cardiologist follow-up",
+                  warning: "Palpitations or shortness of breath require evaluation"
+                },
+                moderate: {
+                  title: "Young Adult Heart Disease - Moderate",
+                  medications: ["Beta-blockers", "Cholesterol-lowering therapy"],
+                  lifestyle: ["Supervised exercise", "No smoking or vaping"],
+                  followUp: "Bi-weekly cardiology review",
+                  warning: "Chest discomfort during exertion is concerning"
+                },
+                severe: {
+                  title: "Young Adult Heart Disease - Severe",
+                  medications: ["Anti-anginal meds", "Emergency nitrate prescription"],
+                  lifestyle: ["Avoid high-intensity activity", "Cardiac rehab program"],
+                  followUp: "Weekly specialist care",
+                  warning: "Fainting or severe chest pain requires ER care"
+                }
+              },
+              "31-50": {
+                mild: {
+                  title: "Adult Heart Disease - Mild",
+                  medications: ["Statins", "Daily low-dose aspirin"],
+                  lifestyle: ["Mediterranean diet", "Yoga or gentle aerobic exercise"],
+                  followUp: "Every 4 weeks with lipid monitoring",
+                  warning: "New fatigue or irregular heartbeat should be reported"
+                },
+                moderate: {
+                  title: "Adult Heart Disease - Moderate",
+                  medications: ["Dual therapy with anticoagulants", "BP and cholesterol meds"],
+                  lifestyle: ["Smoking cessation", "Heart-healthy cooking classes"],
+                  followUp: "Every 2 weeks with cardiology input",
+                  warning: "Edema or tightness in chest needs attention"
+                },
+                severe: {
+                  title: "Adult Heart Disease - Severe",
+                  medications: ["Advanced heart failure treatment", "Implantable device monitoring (if present)"],
+                  lifestyle: ["Home oxygen if required", "Home health nurse coordination"],
+                  followUp: "Weekly or hospital-based follow-up",
+                  warning: "Sudden weight gain or breathing issues are emergencies"
+                }
+              },
+              "50+": {
+                mild: {
+                  title: "Senior Heart Disease - Mild",
+                  medications: ["Low-intensity statins", "Monitor for side effects"],
+                  lifestyle: ["Low-fat, low-sodium diet", "Slow-paced walking"],
+                  followUp: "Monthly visits with geriatrician",
+                  warning: "Memory lapses or fatigue may be cardiac-related"
+                },
+                moderate: {
+                  title: "Senior Heart Disease - Moderate",
+                  medications: ["Anticoagulants", "Daily monitoring of vitals"],
+                  lifestyle: ["Cardiac physical therapy", "Caregiver-supported activities"],
+                  followUp: "Bi-weekly nursing check",
+                  warning: "Confusion or decreased urine output is concerning"
+                },
+                severe: {
+                  title: "Senior Heart Disease - Severe",
+                  medications: ["Advanced CHF medications", "24-hour medication schedule"],
+                  lifestyle: ["Limited mobility care", "Home-based cardiac support"],
+                  followUp: "Home nurse and telemedicine weekly",
+                  warning: "Chest pain or loss of consciousness = emergency"
+                }
+              }
+            },
+            pneumonia: {
+              "0-30": {
+                mild: {
+                  title: "Young Adult Pneumonia - Mild",
+                  medications: ["Oral antibiotics", "Fever management"],
+                  lifestyle: ["Rest and hydration", "Avoid crowded spaces"],
+                  followUp: "Follow-up in 3-5 days",
+                  warning: "Worsening cough or fever after 72 hrs needs reassessment"
+                },
+                moderate: {
+                  title: "Young Adult Pneumonia - Moderate",
+                  medications: ["Stronger antibiotics", "Bronchodilators if needed"],
+                  lifestyle: ["Bed rest", "Steam inhalation and hydration"],
+                  followUp: "Every 3 days until improved",
+                  warning: "Breathing difficulty or chest pain = ER check"
+                },
+                severe: {
+                  title: "Young Adult Pneumonia - Severe",
+                  medications: ["IV antibiotics", "Hospital admission likely"],
+                  lifestyle: ["Oxygen therapy", "Monitoring for sepsis"],
+                  followUp: "Inpatient care or daily visits",
+                  warning: "High respiratory rate or confusion is critical"
+                }
+              },
+              "31-50": {
+                mild: {
+                  title: "Adult Pneumonia - Mild",
+                  medications: ["Broad-spectrum oral antibiotics", "Cough suppressant"],
+                  lifestyle: ["Work leave", "Nutritional fluids"],
+                  followUp: "1 week follow-up with chest auscultation",
+                  warning: "If symptoms persist beyond 5-7 days, reassess"
+                },
+                moderate: {
+                  title: "Adult Pneumonia - Moderate",
+                  medications: ["High-dose antibiotics", "Oxygen if O2 sats drop"],
+                  lifestyle: ["Limited movement", "Assisted care if needed"],
+                  followUp: "Every 3-4 days with repeat chest imaging",
+                  warning: "SpO2 < 92% or worsening symptoms require escalation"
+                },
+                severe: {
+                  title: "Adult Pneumonia - Severe",
+                  medications: ["Hospital-based IV antibiotics", "Antivirals if viral pneumonia"],
+                  lifestyle: ["Isolation if contagious", "Monitored respiratory support"],
+                  followUp: "Daily rounds or critical care",
+                  warning: "ARDS signs or persistent fever = emergency"
+                }
+              },
+              "50+": {
+                mild: {
+                  title: "Senior Pneumonia - Mild",
+                  medications: ["Renal-adjusted antibiotics", "Frequent temperature checks"],
+                  lifestyle: ["Rest with caregiver support", "Humidified air"],
+                  followUp: "Nurse check after 48-72 hrs",
+                  warning: "Lethargy or appetite loss can be early signs of complications"
+                },
+                moderate: {
+                  title: "Senior Pneumonia - Moderate",
+                  medications: ["IV or strong oral antibiotics", "Respiratory therapy"],
+                  lifestyle: ["Oxygen support", "24/7 caregiver observation"],
+                  followUp: "Frequent home or clinic visits",
+                  warning: "Rapid pulse or altered consciousness = urgent care"
+                },
+                severe: {
+                  title: "Senior Pneumonia - Severe",
+                  medications: ["ICU-level antibiotics", "Possible mechanical ventilation"],
+                  lifestyle: ["ICU admission", "Infection control measures"],
+                  followUp: "Hospital admission with round-the-clock care",
+                  warning: "Cyanosis or unresponsiveness = critical emergency"
+                }
+              }
+            }     
+        };
+               
+        document.addEventListener('DOMContentLoaded', () => {
+            const severityOptions = document.querySelectorAll('.severity-option');
+            let selectedSeverity = 'moderate';
+
+            severityOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    severityOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    selectedSeverity = option.getAttribute('data-value');
+                });
+            });
+
+            const form = document.getElementById('dischargeForm');
+            const resultDiv = document.getElementById('recommendationResult');
+            const resultContent = document.getElementById('recommendationContent');
+
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const condition = document.getElementById('disease').value;
+                const ageGroup = document.getElementById('ageGroup').value;
+
+                if (recommendations[condition] && recommendations[condition][ageGroup]) {
+                    const data = recommendations[condition][ageGroup][selectedSeverity];
+
+                    let content = `
+                        <h3>${data.title}</h3>
+                        <strong>Medications:</strong>
+                        <ul>${data.medications.map(med => `<li>${med}</li>`).join('')}</ul>
+                        <strong>Lifestyle Recommendations:</strong>
+                        <ul>${data.lifestyle.map(life => `<li>${life}</li>`).join('')}</ul>
+                        <strong>Follow-Up:</strong> ${data.followUp}<br>
+                        <strong>Warning:</strong> ${data.warning}
+                    `;
+                    resultContent.innerHTML = content;
+                    resultDiv.style.display = 'block';
+                } else {
+                    resultContent.innerHTML = "<p>No care plan available for the selected condition and age group.</p>";
+                    resultDiv.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
