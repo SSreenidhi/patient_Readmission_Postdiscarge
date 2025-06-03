@@ -22,10 +22,13 @@ else:
     gemini_model = None
     print("❌ Google API key not found!")
 
-# Load ML model components
-scalers = joblib.load(r"C:\Users\Dell\Desktop\new\scalers.pkl")
-label_encoders = joblib.load(r"C:\Users\Dell\Desktop\new\label_encoders.pkl")
-model = joblib.load(r"C:\Users\Dell\Desktop\new\xgboost_patient_readmission.pkl")
+# Get base directory for relative path access
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Load ML model components using relative paths
+scalers = joblib.load(os.path.join(BASE_DIR, "scalers.pkl"))
+label_encoders = joblib.load(os.path.join(BASE_DIR, "label_encoders.pkl"))
+model = joblib.load(os.path.join(BASE_DIR, "xgboost_patient_readmission.pkl"))
 
 categorical_columns = ['age', 'medical_specialty', 'change', 'diabetes_med']
 numerical_columns = ['n_lab_procedures', 'n_inpatient', 'n_emergency']
