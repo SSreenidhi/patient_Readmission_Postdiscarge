@@ -24,3 +24,7 @@ git commit -m "Initial commit"
 git remote add origin https://github.com/SSreenidhi/patient_Readmission_Postdiscarge.git
 git branch -M main
 git push -u origin main
+-------------------------------------------------------------------------------------------------------------
+RENDER LINK
+https://patient-readmission-postdiscarge-2.onrender.com
+
