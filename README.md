@@ -1,10 +1,3 @@
-Perfect! You're absolutely right, bro — since this is **your personal GitHub**, not a college group submission, there’s **no need to mention roles/contributions or references** unless you *really* want to.
-
-Let’s **refine it again** into a clean, professional, solo-style `README.md`, like how recruiters and mentors expect to see it.
-
-Here’s the final, **streamlined and personal version** with everything needed — no team roles, no extra citations:
-
----
 
 ## 🏥 HealthPulse: AI-Powered Hospital Readmission Predictor & Post-Discharge Care Assistant
 
@@ -67,18 +60,8 @@ HealthPulse addresses this gap by:
 
 * **Input Form** – Collects patient data (age, prior visits, diagnosis, etc.)
 * **Prediction Engine** – Uses XGBoost to estimate readmission risk
-* **Care Recommendation** – Outputs personalized recovery suggestions
-* **Result Dashboard** – Shows prediction score and advice clearly
+* **Care Recommendation** – Outputs personalized recovery suggestion
 
----
-
-### 📊 Model Performance
-
-| Metric   | Performance                               |
-| -------- | ----------------------------------------- |
-| Accuracy | ✅ High                                    |
-| Recall   | ✅ Good for identifying high-risk patients |
-| F1 Score | ✅ Balanced prediction quality             |
 
 ---
 
@@ -91,15 +74,9 @@ HealthPulse addresses this gap by:
 * Support for multiple languages
 
 ---
-
-### 🧾 Summary
+Summary
 
 HealthPulse is a real-world AI/ML application that empowers healthcare providers to predict readmissions and take timely, data-driven actions to improve patient outcomes.
 
-> Built with purpose, powered by machine learning, and designed for impact.
-
----
-
-Let me know if you want a `.md` file or want help uploading it to your GitHub right now — we’ll get it done before your orientation!
 
 LINK:https://patient-readmission-postdiscarge-2.onrender.com
